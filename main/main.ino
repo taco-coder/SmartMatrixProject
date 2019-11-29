@@ -22,13 +22,338 @@ SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(backgroundLayer, kMatrixWidth, kMatrixHeig
 SMARTMATRIX_ALLOCATE_SCROLLING_LAYER(firstWord, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kScrollingLayerOptions);
 SMARTMATRIX_ALLOCATE_SCROLLING_LAYER(secondWord, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kScrollingLayerOptions);
 
-//const int defaultBrightness = (100*255)/100;    // full (100%) brightness
-const int defaultBrightness = (50*255)/100;    // dim: 15% brightness
+const int defaultBrightness = (100*255)/100;    // full (100%) brightness
+//const int defaultBrightness = (50*255)/100;    // dim: 50% brightness
 
 // Teensy 3.0 has the LED on pin 13
 const int ledPin = 13;
-//used in the loop
-unsigned int ticker = 1;
+
+//function to update tree lights
+void updateLights(const rgb24 & color){
+  /*lines to draw lights across tree                                                                               
+ * x1, y1
+ * x2, y2
+ * color
+ */
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 16, matrix.getScreenHeight() - 23,
+                            matrix.getScreenWidth() - 11, matrix.getScreenHeight() - 25,
+                            color);      
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 18, matrix.getScreenHeight() - 18,
+                            matrix.getScreenWidth() - 10, matrix.getScreenHeight() - 20,
+                            color);                                   
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 20, matrix.getScreenHeight() - 13,
+                            matrix.getScreenWidth() - 8, matrix.getScreenHeight() - 15,
+                            color);                               
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 22, matrix.getScreenHeight() - 8,
+                            matrix.getScreenWidth() - 6, matrix.getScreenHeight() - 10,
+                            color);    
+                                delay(500);
+    backgroundLayer.swapBuffers();
+}
+
+//function to create fire in position 1
+void fireOne(const rgb24 & color1, const rgb24 & color2){
+/*lines to draw fire                                                                                
+ * x1, y1
+ * x2, y2
+ * color
+ */
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 4,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 4,
+                            color1);
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 4,
+                            color2);          
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 10,
+                            color1);    
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 10,
+                            color1);                                                                                  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 5,
+                            color1);  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 5,
+                            color2);                                
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 7,
+                                color1); 
+                                                                
+  /* Orange Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 12, 
+                               color1);   
+  /* Orange Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 15, 
+                               color1);                                                                
+  /* Orange Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 13, 
+                               color1);    
+  /*                                   
+   * yellow rectangles
+   */
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 47, matrix.getScreenHeight() - 7,
+                                color2);  
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 7,
+                                matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8,
+                                color2);   
+  /* Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 11, 
+                               color2);   
+  /* Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 51, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 12, 
+                               color2);    
+  /* Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 10, 
+                               color2);  
+  backgroundLayer.swapBuffers();
+}
+
+//function to create fire in position 2
+void fireTwo(const rgb24 & color1, const rgb24 & color2){
+/*lines to draw fire                                                                                
+ * x1, y1
+ * x2, y2
+ * color
+ */
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 4,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 4,
+                            color1);
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 4,
+                            color2);          
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 10,
+                            color1);    
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 10,
+                            color1);                                                                                  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 5,
+                            color1);  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 5,
+                            color2);                                
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 7,
+                                color1); 
+                                                                
+  /* Orange Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 12, 
+                               color1);   
+  /* Orange Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 15, 
+                               color1);                                                                
+  /* Orange Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 47, matrix.getScreenHeight() - 13, 
+                               color1);    
+  /*                                   
+   * yellow rectangles
+   */
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 47, matrix.getScreenHeight() - 7,
+                                color2);  
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 7,
+                                matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8,
+                                color2);   
+  /* Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 11, 
+                               color2);   
+  /* Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 51, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 12, 
+                               color2);    
+  /* Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 10, 
+                               color2);  
+  backgroundLayer.swapBuffers();
+}
+
+//function to create fire in position 3
+void fireThree(const rgb24 & color1, const rgb24 & color2){
+/*lines to draw fire                                                                                
+ * x1, y1
+ * x2, y2
+ * color
+ */
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 4,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 4,
+                            color1);
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 4,
+                            color2);          
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 10,
+                            color1);    
+  backgroundLayer.drawPixel(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 10,
+                            color1);                                                                                  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 5,
+                            color1);  
+  backgroundLayer.drawLine(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 5,
+                            matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 5,
+                            color2);                                
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 7,
+                                color1); 
+                                                                
+  /* Orange Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 12, 
+                               color1);   
+  /* Orange Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 52, matrix.getScreenHeight() - 15, 
+                               color1);                                                                
+  /* Orange Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 45, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 47, matrix.getScreenHeight() - 13, 
+                               color1);    
+  /*                                   
+   * yellow rectangles
+   */
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 6,
+                                matrix.getScreenWidth() - 47, matrix.getScreenHeight() - 7,
+                                color2);  
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 7,
+                                matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8,
+                                color2);   
+  /* Triangle right
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 46, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 48, matrix.getScreenHeight() - 11, 
+                               color2);   
+  /* Triangle mid
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 51, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 49, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 12, 
+                               color2);    
+  /* Triangle left
+  * X1, Y1
+  * X2, Y2
+  * X3, Y3
+  * Color
+  */
+  backgroundLayer.fillTriangle(matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 53, matrix.getScreenHeight() - 8, 
+                               matrix.getScreenWidth() - 54, matrix.getScreenHeight() - 10, 
+                               color2);  
+  backgroundLayer.swapBuffers();
+}
+//draws line to make ornaments
+void makeOrnament(int x1, int x2, int y, int x3, int y1, int y2, const rgb24 & color){
+  backgroundLayer.drawLine(matrix.getScreenWidth() - x1, matrix.getScreenHeight() - y,
+                           matrix.getScreenWidth() - x2, matrix.getScreenHeight() - y,
+                           color);         
+
+   backgroundLayer.drawLine(matrix.getScreenWidth() - x3, matrix.getScreenHeight() - y1,
+                            matrix.getScreenWidth() - x3, matrix.getScreenHeight() - y2,
+                            color); 
+}
 
 // the setup() method runs once, when the sketch starts
 void setup() {
@@ -121,93 +446,17 @@ void setup() {
                            {0xff, 0xf2, 0x00});                                                                                    
 
 /*                           
- * lines to draw ornaments
- * x1, y1
- * x2, y2
- * color
+ *  draw ornaments
  */
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 24, matrix.getScreenHeight() - 6,
-                           matrix.getScreenWidth() - 22, matrix.getScreenHeight() - 6,
-                           {0xff, 0x00, 0x00});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 23, matrix.getScreenHeight() - 7,
-                            matrix.getScreenWidth() - 23, matrix.getScreenHeight() - 5,
-                            {0xff, 0x00, 0x00});      
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 4, matrix.getScreenHeight() - 6,
-                           matrix.getScreenWidth() - 2, matrix.getScreenHeight() - 6,
-                           {0x00, 0x00, 0xff});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 3, matrix.getScreenHeight() - 7,
-                            matrix.getScreenWidth() - 3, matrix.getScreenHeight() - 5,
-                            {0x00, 0x00, 0xff});         
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 22, matrix.getScreenHeight() - 11,
-                           matrix.getScreenWidth() - 20, matrix.getScreenHeight() - 11,
-                           {0x00, 0xff, 0xff});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 21, matrix.getScreenHeight() - 12,
-                            matrix.getScreenWidth() - 21, matrix.getScreenHeight() - 10,
-                            {0x00, 0xff, 0xff});     
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 6, matrix.getScreenHeight() - 11,
-                           matrix.getScreenWidth() - 4, matrix.getScreenHeight() - 11,
-                           {0xff, 0xff, 0x00});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 5, matrix.getScreenHeight() - 12,
-                            matrix.getScreenWidth() - 5, matrix.getScreenHeight() - 10,
-                            {0xff, 0xff, 0x00});       
-
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 20, matrix.getScreenHeight() - 17,
-                           matrix.getScreenWidth() - 18, matrix.getScreenHeight() - 17,
-                           {0xff, 0xff, 0xff});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 19, matrix.getScreenHeight() - 18,
-                            matrix.getScreenWidth() - 19, matrix.getScreenHeight() - 16,
-                            {0xff, 0xff, 0xff});                                                                                                                        
- 
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 8, matrix.getScreenHeight() - 17,
-                           matrix.getScreenWidth() - 6, matrix.getScreenHeight() - 17,
-                           {0xff, 0xaa, 0x00});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 7, matrix.getScreenHeight() - 18,
-                            matrix.getScreenWidth() - 7, matrix.getScreenHeight() - 16,
-                            {0xff, 0xaa, 0x00});   
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 18, matrix.getScreenHeight() - 22,
-                           matrix.getScreenWidth() - 16, matrix.getScreenHeight() - 22,
-                           {0xff, 0x11, 0xdf});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 17, matrix.getScreenHeight() - 23,
-                            matrix.getScreenWidth() - 17, matrix.getScreenHeight() - 21,
-                            {0xff, 0x11, 0xdf});    
-
-  backgroundLayer.drawLine(matrix.getScreenWidth() - 10, matrix.getScreenHeight() - 22,
-                           matrix.getScreenWidth() - 8, matrix.getScreenHeight() - 22,
-                           {0x6b, 0x02, 0xff});         
-
-   backgroundLayer.drawLine(matrix.getScreenWidth() - 9, matrix.getScreenHeight() - 23,
-                            matrix.getScreenWidth() - 9, matrix.getScreenHeight() - 21,
-                            {0x6b, 0x02, 0xff});       
-/*lines to draw lights across tree                                                                               
- * x1, y1
- * x2, y2
- * color
- */
-    backgroundLayer.drawLine(matrix.getScreenWidth() - 16, matrix.getScreenHeight() - 23,
-                            matrix.getScreenWidth() - 11, matrix.getScreenHeight() - 25,
-                            {0xff, 0xff, 0x00});      
-    backgroundLayer.drawLine(matrix.getScreenWidth() - 18, matrix.getScreenHeight() - 18,
-                            matrix.getScreenWidth() - 10, matrix.getScreenHeight() - 20,
-                            {0xff, 0xff, 0x00});                                   
-    backgroundLayer.drawLine(matrix.getScreenWidth() - 20, matrix.getScreenHeight() - 13,
-                            matrix.getScreenWidth() - 8, matrix.getScreenHeight() - 15,
-                            {0xff, 0xff, 0x00});                               
-    backgroundLayer.drawLine(matrix.getScreenWidth() - 22, matrix.getScreenHeight() - 8,
-                            matrix.getScreenWidth() - 6, matrix.getScreenHeight() - 10,
-                            {0xff, 0xff, 0x00});    
-                            
+  makeOrnament(24, 22, 6, 23, 7, 5, {0xff, 0x00, 0x00});
+  makeOrnament(4, 2, 6, 3, 7, 5, {0x00, 0x00, 0xff});    
+  makeOrnament(22, 20, 11, 21, 12 ,10, {0x00, 0xff, 0xff});
+  makeOrnament(6, 4, 11, 5, 12, 10, {0xff, 0xff, 0x00});
+  makeOrnament(20, 18, 17, 19, 18, 16, {0xff, 0xff, 0xff});
+  makeOrnament(8, 6, 17, 7, 18 ,16, {0xff, 0xaa, 0x00});
+  makeOrnament(18, 16, 22, 17, 23, 21, {0xff, 0x11, 0xdf});
+  makeOrnament(10, 8, 22, 9, 23, 21, {0x6b, 0x02, 0xff}); 
+                                
 /* Rectangle boxes                                                       
  * X1, Y1                                                          
  * X2, Y2
@@ -230,7 +479,34 @@ void setup() {
                                 {0xff, 0xff, 0x00});                                   
   backgroundLayer.fillRectangle(matrix.getScreenWidth() - 38, matrix.getScreenHeight() - 11,
                                 matrix.getScreenWidth() - 37, matrix.getScreenHeight(),
-                                {0xff, 0xff, 0x00});                                                                                     
+                                {0xff, 0xff, 0x00});
+/*lines to draw lights across tree                                                                               
+ * x1, y1
+ * x2, y2
+ * color
+ */                                     
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 16, matrix.getScreenHeight() - 23,
+                            matrix.getScreenWidth() - 11, matrix.getScreenHeight() - 25,
+                            {0xff, 0xff, 0x00});      
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 18, matrix.getScreenHeight() - 18,
+                            matrix.getScreenWidth() - 10, matrix.getScreenHeight() - 20,
+                            {0xff, 0xff, 0x00});                                   
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 20, matrix.getScreenHeight() - 13,
+                            matrix.getScreenWidth() - 8, matrix.getScreenHeight() - 15,
+                            {0xff, 0xff, 0x00});                               
+    backgroundLayer.drawLine(matrix.getScreenWidth() - 22, matrix.getScreenHeight() - 8,
+                            matrix.getScreenWidth() - 6, matrix.getScreenHeight() - 10,
+                            {0xff, 0xff, 0x00});  
+
+/* log block                                            
+ * X1, Y1                                                          
+ * X2, Y2
+ * Color
+ */
+  backgroundLayer.fillRectangle(matrix.getScreenWidth() - 55, matrix.getScreenHeight() - 3,
+                                matrix.getScreenWidth() - 45, matrix.getScreenHeight(),
+                                {0x66, 0x35, 0x00});   
+                                                                                                                                              
   backgroundLayer.swapBuffers();
 
     
@@ -261,18 +537,13 @@ void setup() {
 }
 //runs repeatedly
 void loop() {
-  while(ticker % 2 != 3){
-    if(ticker % 2 == 0){
-      backgroundLayer.fillRectangle(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 11,
-                                matrix.getScreenWidth() - 48, matrix.getScreenHeight(),
-                                {0xff, 0xff, 0x00});
-                                delay(3000);    
-    } else if (ticker % 2 == 1){
-            backgroundLayer.fillRectangle(matrix.getScreenWidth() - 50, matrix.getScreenHeight() - 11,
-                                matrix.getScreenWidth() - 48, matrix.getScreenHeight(),
-                                {0xff, 0xff,0xff});    
-                                delay(3000);
-    }
-    ticker++;
-  }
+  //fire in the first position
+    fireOne({0xff, 0x64, 0x00}, {0xff, 0xff, 0x00});
+  //update lights on tree
+    updateLights({0xff, 0xff, 0x00});
+    updateLights({0xff, 0xff, 0xff});
+    updateLights({0x00, 0xff, 0xff});
+    updateLights({0x00, 0x00, 0xff});                                                                             
+    updateLights({0xff, 0x00, 0x00});
+    updateLights({0xff, 0x00, 0xff});                            
 }
